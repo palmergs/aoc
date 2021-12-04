@@ -8,11 +8,12 @@ class Board
     end
   end
 
-  attr_reader :index, :board
+  attr_reader :index, :board, :last
 
   def initialize index, input
     @index = index / 6
     @board = []
+    @last = nil
     (0..4).each do |n| 
       row = input[index + n].strip.split(/\s+/).compact.map {|n| Square.new(n.to_i, false) }
       @board += row
@@ -20,8 +21,9 @@ class Board
   end
 
   def match? n
+    @last = n.to_i
     @board.each do |sq|
-      if sq.num == n.to_i
+      if sq.num == @last
         sq.match = true
         return true
       end
@@ -34,8 +36,8 @@ class Board
     board.select {|sq| sq.match == false}.map {|sq| sq.num }
   end
 
-  def score number
-    unmatched.inject(&:+) * number.to_i
+  def score
+    unmatched.inject(&:+) * last
   end
 
   def win?
@@ -90,14 +92,22 @@ while index < input.length
   index += 6
 end
 
+winning = []
 numbers.each do |n|
   puts "calling #{ n }"
   boards.each do |board|
+    next if board.win?
+
     if board.match?(n)
       puts "match: #{ board }"
       if board.win?
-        raise "board: #{ board.index } input: #{ n } score: #{ board.score(n) }"
+        winning << board
       end
     end
   end
 end
+
+winning.each_with_index do |board, idx|
+  puts "#{ idx }. #{ board } last=#{ board.last } score=#{ board.score }"
+end
+
