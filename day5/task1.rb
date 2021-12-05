@@ -14,23 +14,37 @@ lines.each do |line|
     (miny..maxy).each do |n|
       tot += 1
       map[[x1, n]] += 1
-      puts "overlap #{ line } at #{ x1 },#{ n } #{ map[[x1, n]] }" if map[[x1, n]] > 1
+      # puts "overlap #{ line } at #{ x1 },#{ n } #{ map[[x1, n]] }" if map[[x1, n]] > 1
     end
     horiz += 1
-    puts "horizontal #{ line } (#{ x1 },#{ y1 } -> #{ x2 },#{ y2 })"
+    # puts "horizontal #{ line } (#{ x1 },#{ y1 } -> #{ x2 },#{ y2 })"
   elsif y1 == y2
     minx = x1 < x2 ? x1 : x2
     maxx = x1 < x2 ? x2 : x1
     (minx..maxx).each do |n|
       tot += 1
       map[[n, y1]] += 1
-      puts "overlap #{ line } at #{ n },#{ y1 } #{ map[[n, y1]] }" if map[[n, y1]] > 1
+      # puts "overlap #{ line } at #{ n },#{ y1 } #{ map[[n, y1]] }" if map[[n, y1]] > 1
     end
     vert += 1
-    puts "vertical #{ line } (#{ x1 },#{ y1 } -> #{ x2 },#{ y2 })"
+    # puts "vertical #{ line } (#{ x1 },#{ y1 } -> #{ x2 },#{ y2 })"
   else
+    steps1 = (x2 - x1).abs + 1
+    steps2 = (y2 - y1).abs + 1
+    puts "line=#{ line }"
+
+    multx = x1 < x2 ? 1 : -1
+    multy = y1 < y2 ? 1 : -1
+    steps1.times do |n|
+      x = x1 + (multx * n) 
+      y = y1 + (multy * n)
+      tot += 1
+      map[[x, y]] += 1
+      puts "#{ x },#{ y }"
+      puts "overlap #{ line } at #{ x },#{ y } #{ map[[x, y]] }" if map[[x, y]] > 1
+    end
     diag += 1
-    puts "skipping #{ line } (#{ x1 },#{ y1 } -> #{ x2 },#{ y2 })"
+    puts "diagonal #{ line } (#{ x1 },#{ y1 } -> #{ x2 },#{ y2 })"
   end
 end
 
