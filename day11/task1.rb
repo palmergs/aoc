@@ -11,19 +11,26 @@ class Octopi
 
   def step
     exploding = increment
-    # exploded = Set.new
 
     while !exploding.empty?
-      puts "number to explode = #{ exploding.size }"
-      # puts "number exploded = #{ exploded.size }"
+      # puts "number to explode = #{ exploding.size }"
       ex = exploding.pop
-      puts "exploding #{ ex }"
-      # exploded << ex
+      # puts "exploding #{ ex }"
       explode(ex[0], ex[1], exploding)
     end
 
     reset
     display_map
+  end
+
+  def same?
+    set = Set.new
+    (0...10).each do |row|
+      (0...10).each do |col|
+        set << array[row][col]
+      end
+    end
+    set.size == 1
   end
 
   def reset
@@ -87,4 +94,7 @@ end
 o = Octopi.new('input.txt')
 #o.step
 #o.step
-100.times { o.step }
+1000.times do |n|
+  o.step
+  raise "all the same on #{ n + 1 }" if o.same?
+end
