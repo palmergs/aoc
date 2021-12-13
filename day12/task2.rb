@@ -9,6 +9,18 @@ pp map
 
 require 'set'
 
+def can_visit option, path
+  return true if option != option.downcase
+  return true unless path.include?(option)
+
+  lowercase = path.select {|cave| cave.downcase == cave}.sort
+  (1...lowercase.length).each do |n|
+    return false if lowercase[n-1] == lowercase[n]
+  end
+
+  true
+end
+
 def visit map, curr, paths, path = []
   path << curr
   puts "PATH = #{ path.inspect }"
@@ -20,7 +32,7 @@ def visit map, curr, paths, path = []
 
   options = map[curr]
   options.each do |option|
-    if option != option.downcase || !path.include?(option)
+    if can_visit(option, path)
       visit(map, option, paths, path.clone)
     end
   end
@@ -28,5 +40,4 @@ end
 
 paths = []
 visit(map, 'start', paths)
-puts "PATHS = #{ paths.inspect }"
 puts "PATHS = #{ paths.count }"
